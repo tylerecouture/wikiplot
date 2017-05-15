@@ -6,7 +6,7 @@ library(stringr)
 # PARAMETERS FOR PLOT GENERATION:
 
 # How many nearest data points to use for the local fit 
-num_data_points = 35
+num_data_points = 30
 
 
 theurl <- getURL("https://en.wikipedia.org/wiki/Opinion_polling_in_the_43rd_Canadian_federal_election", ssl.verifyPeer=FALSE)
@@ -17,6 +17,11 @@ df <- tables[[1]]
 
 # Remove empty rows (wikipedia tables sometime use empty rows for spacing)
 df <- df[!apply(df == "", 1, all),]
+# Remove all non-standard rows, they will have <NA> values in them 
+# (e.g Rows that are comments about leadership changes) 
+df <- df[complete.cases(df),]
+
+df #print resulting table to console for debugging
 
 #get columns 1-2 and 4-9.  Col 3 is a link to poll source
 df <- df[1:nrow(df), c(1:2, 4:10) ]
